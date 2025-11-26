@@ -47,6 +47,7 @@ You must have [HACS](https://hacs.xyz/) installed. Please install the following 
 * `config-template-card`
 * `card-mod`
 * `better-moment-card`
+* `weather-card`
 * `browser_mod` (Required for the popups to work)
 * `layout-card` (Required for the Sections view)
 
