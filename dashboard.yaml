@@ -17,22 +17,17 @@ sections:
           - parentStyle: |
               font-size:1.5em; text-align:center; margin-top:5px;
             templateRaw: |
-              {{moment format=LLLL dd, yyyy}}              
+              {{moment format=LLLL dd, yyyy}}
           - parentStyle: |
               font-size:4em;  text-align:center; font-weight:400;
             templateRaw: |
-              {{moment format=HH:mm}} 
+              {{moment format=HH:mm}}
         grid_options:
           columns: 20
         card_mod:
-          style: |
-            ha-card {
-              background: transparent !important;
-              box-shadow: none !important;
-              border: none !important;
-            }
+          class: bg-default-style
       - type: custom:weather-card
-        entity: weather.home   # <--- UPDATE THIS ENTITY
+        entity: "var(--default-weather-entity)"
         current: true
         details: true
         forecast: false
@@ -42,21 +37,16 @@ sections:
       - type: weather-forecast
         show_current: false
         show_forecast: true
-        entity: weather.home   # <--- UPDATE THIS ENTITY
+        entity: "var(--default-weather-entity)"
         forecast_type: daily
         name: Weather Forecast
         grid_options:
           columns: 20
           rows: 3
         card_mod:
-          style: |
-            ha-card {
-              background: transparent !important;
-              box-shadow: none !important;
-              border: none !important;
-            }
+          class: bg-default-style
     column_span: 10
-    
+
   # --- CONTROLS SECTION (Buttons) ---
   - type: grid
     cards:
@@ -84,110 +74,38 @@ sections:
           columns: 120
           rows: auto
       - type: horizontal-stack
-        cards:
-          # --- BUTTONS (Update entities below) ---
+        # --- BUTTONS (Update entities below) ---
+        cards: |
+          {% set family_members = "var(--family-members)" -%}
+          {% for member, info in family_members %}
           - type: custom:bubble-card
             card_type: button
-            button_type: state
-            entity: person.alice  # <--- UPDATE THIS ENTITY
+            button_type: {{ info.button_type }}
+            {% if info.button_type === 'name' -%}
+            name: {{family_memebers[member].name}}
+              {% if info.icon -%}
+            icon: {{family_members}}
+              {% endif -%}
+            {% elif info.button_type === 'state' -%}
+            entity: {{info.entity}}
+            {% elif info.button_type === 'switch' -%}
+            entity: {{info.entity}}
+            name: {{info.name}}
+              {% if info.icon -%}
+            icon: {{info.icon}}
+              {% endif -%}
+            {% endif -%}
             show_icon: true
             show_name: true
             tap_action:
               action: perform-action
-              perform_action: script.alice_calendar_visible_filter
+              perform_action: script.{{member}}_calendar_visible_filter
             styles: |
               .bubble-button-background {
                 opacity: 1 !important;
-                background-color: ${hass.states['input_text.alice_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--alice-default-primary-color)'} !important;
+                background-color: ${hass.states['input_text.{{member}}_calendar_filter'].state === '.*' ? 'var(--default-disabled-color)' : 'var(--{{member}}-default-primary-color)'} !important;
               }
-          - type: custom:bubble-card
-            card_type: button
-            button_type: state
-            entity: person.bob    # <--- UPDATE THIS ENTITY
-            show_icon: true
-            show_name: true
-            tap_action:
-              action: perform-action
-              perform_action: script.bob_calendar_visible_filter
-            styles: |
-              .bubble-button-background {
-                opacity: 1 !important;
-                background-color: ${hass.states['input_text.bob_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--bob-default-primary-color)'} !important;
-              }
-          - type: custom:bubble-card
-            card_type: button
-            button_type: state
-            entity: person.charlie  # <--- UPDATE THIS ENTITY
-            show_icon: true
-            show_name: true
-            tap_action:
-              action: perform-action
-              perform_action: script.charlie_calendar_visible_filter
-            styles: |
-              .bubble-button-background {
-                opacity: 1 !important;
-                background-color: ${hass.states['input_text.charlie_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--charlie-default-primary-color)'} !important;
-              }
-          - type: custom:bubble-card
-            card_type: button
-            button_type: state
-            entity: person.daisy    # <--- UPDATE THIS ENTITY
-            show_icon: true
-            show_name: true
-            tap_action:
-              action: perform-action
-              perform_action: script.daisy_calendar_visible_filter
-            styles: |
-              .bubble-button-background {
-                opacity: 1 !important;
-                background-color: ${hass.states['input_text.daisy_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--daisy-default-primary-color)'} !important;
-              }
-          - type: custom:bubble-card
-            card_type: button
-            button_type: switch
-            name: Family
-            icon: mdi:human-male-female-child
-            show_icon: true
-            show_name: true
-            tap_action:
-              action: perform-action
-              perform_action: script.family_calendar_visible_filter
-            styles: |
-              .bubble-button-background {
-                opacity: 1 !important;
-                background-color: ${hass.states['input_text.family_calendar_filter'].state === '.*' ? 'light-grey' : '#4A90E2'} !important;
-              }
-            entity: input_boolean.family_calendar_show
-          - type: custom:bubble-card
-            card_type: button
-            button_type: name
-            name: Birthdays
-            icon: mdi:cake-variant
-            show_icon: true
-            show_name: true
-            tap_action:
-              action: perform-action
-              perform_action: script.birthdays_calendar_visible_filter
-            styles: |
-              .bubble-button-background {
-                opacity: 1 !important;
-                background-color: ${hass.states['input_text.birthdays_calendar_filter'].state === '.*' ? 'light-grey' : '#33a02c'} !important;
-              }
-          - type: custom:bubble-card
-            card_type: button
-            button_type: name
-            name: Holidays
-            icon: mdi:bag-personal
-            show_icon: true
-            show_name: true
-            tap_action:
-              action: perform-action
-              perform_action: script.holidays_calendar_visible_filter
-            styles: |
-              .bubble-button-background {
-                opacity: 1 !important;
-                background-color: ${hass.states['input_text.holidays_calendar_filter'].state === '.*' ? 'light-grey' : '#ff7f00'} !important;
-              }
+          {% endfor %}
         grid_options:
           columns: 45
           rows: auto
@@ -223,28 +141,22 @@ sections:
         show_last_changed: false
         show_attribute: false
     column_span: 10
-    
+
   # --- CALENDAR SECTION (Week Planner Card) ---
   - type: grid
     cards:
       - type: custom:config-template-card
-        entities:
-          - input_text.alice_calendar_filter
-          - input_text.bob_calendar_filter
-          - input_text.charlie_calendar_filter
-          - input_text.daisy_calendar_filter
-          - input_text.family_calendar_filter
-          - input_text.holidays_calendar_filter
-          - input_text.birthdays_calendar_filter
+        entities: |
+          {% set family_members = "var(--family-members)" -%}
+          {% for member in family_members %}
+          - input_text.{{member}}_calendar_filter
+          {% endfor %}
           - input_select.calendar_view
-        variables:
-          ALICAL: states['input_text.alice_calendar_filter']?.state
-          BOBCAL: states['input_text.bob_calendar_filter']?.state
-          CHACAL: states['input_text.charlie_calendar_filter']?.state
-          DAICAL: states['input_text.daisy_calendar_filter']?.state
-          FAMCAL: states['input_text.family_calendar_filter']?.state
-          HOLCAL: states['input_text.holidays_calendar_filter']?.state
-          BIRCAL: states['input_text.birthdays_calendar_filter']?.state
+        variables: |
+          {% set family_members = "var(--family-members)" %}
+          {% for member in family_members %}
+          {{member}}_cal: states['input_text.{{member}}_calendar_filter']?.state
+          {% endfor %}
           VIEW: states['input_select.calendar_view']?.state
           DAYS: |
             (() => {
@@ -257,40 +169,19 @@ sections:
               if (calendarView === 'Month' && width >= 1920) return 28;
               if (calendarView === 'Biweek' && width >= 1920) return 14;
               if (calendarView === 'Week' && width >= 1920) return 7;
-              return 3;
+              return "var(--default-calendar-days)";
             })()
         card:
           type: custom:week-planner-card
-          calendars:
-            # --- MAP CALENDARS HERE ---
-            - entity: calendar.alice
-              name: Alice
-              color: "var(--alice-default-primary-color)"
-              filter: ${ ALICAL }
-            - entity: calendar.bob
-              name: Bob
-              color: "var(--bob-default-primary-color)"
-              filter: ${ BOBCAL }
-            - entity: calendar.charlie
-              name: Charlie
-              color: "var(--charlie-default-primary-color)"
-              filter: ${ CHACAL }
-            - entity: calendar.daisy
-              name: Daisy
-              color: "var(--daisy-default-primary-color)"
-              filter: ${ DAICAL }
-            - entity: calendar.family
-              name: Family
-              color: "var(--family-default-primary-color)"
-              filter: ${ FAMCAL }
-            - entity: calendar.birthdays
-              name: Birthdays
-              color: "var(--birthdays-default-primary-color)"
-              filter: ${ BIRCAL }
-            - entity: calendar.holidays # <--- Check this entity ID after adding integration
-              name: Holidays
-              color: "var(--holidays-default-primary-color)"
-              filter: ${ HOLCAL }
+          # --- MAP CALENDARS HERE ---
+          calendars: |
+            {% set family_members = "var(--family-members)" %}
+            {%- for member in family_members %}
+            - entity: calendar.{{member}}
+              name: {{family_members[member].name}}
+              color: "var(--{{member}}-default-primary-color)"
+              filter: ${ {{member}}_cal }
+            {% endfor %}
           days: ${ DAYS }
           startingDayOffset: 0
           hideWeekend: false
@@ -324,13 +215,13 @@ sections:
                 .day .date .text { font-size: 1em !important; font-weight: bold !important; }
                 .day .date .number { font-weight: bold !important; font-size: 3em !important; }
                 .day { border: solid 1px whitesmoke; padding: 0.2%; width: 13% !important; }
-              }    
+              }
         grid_options:
           columns: 120
           rows: 1
           showDescription: false
     column_span: 10
-    
+
   # --- POPUP SECTION (Hidden) ---
   - type: grid
     cards:
@@ -404,7 +295,7 @@ sections:
                           if (states['input_select.calendar_select'].state == 'Daisy') return "var(--daisy-default-primary-color)";
                           if (states['input_select.calendar_select'].state == 'Family') return "var(--family-default-primary-color)";
                           return "gray";
-                        ]]]                
+                        ]]]
 cards: []
 icon: mdi:calendar-blank-multiple
 background:

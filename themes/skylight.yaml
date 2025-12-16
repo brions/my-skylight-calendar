@@ -64,17 +64,65 @@ Skylight:
   ###################################
   # In this section, add your own variables and values that you can use to reduce redundancy
   
-  #### calendar name list
-  family-members:
-    - alice
-    - bob
-    - charlie
-    - daisy
-    - family
-    - birthdays
-    - holidays
+  # default number of days to show on the calendar if not modified by screen size or selection
+  default-calendar-days: 3
 
-  #### default calendar colors - format: [family-member.name]-default-primary-color: "[color value/name]"
+  # default time zone
+  default-time-zone: 'America/New_York'
+
+  # weather variables
+  default-weather-entity: weather.home
+
+  #### family member dictionary (id -> "Display Name")
+  # This dictionary is used in loops to generate calendars and other per-family-member sections of code.
+  # The key is the member/calendar name used in other variables like the default colors below.
+  # The value is the display name of that member/calendar which will be used anywhere the name is shown on the dashboard.
+  family-members:
+    alice: 
+      name: Alice
+      entity: person.alice
+      button_type: state
+    bob: 
+      name: Bob
+      entity: person.bob
+      button_type: state
+    charlie:
+      name: Charlie
+      entity: person.charlie
+      button_type: state
+    daisy: 
+      name: Daisy
+      entity: person.daisy
+      button_type: state
+    family: 
+      name: Family
+      button_type: switch
+      icon: 'mdi:human-male-female-child'
+      entity: 'input_boolean.family_calendar_show'
+    birthdays: 
+      name: Birthdays
+      button_type: name
+      icon: 'mdi:cake-variant'
+    holidays: 
+      name: Holidays
+      button_type: name
+      icon: 'mdi:bag-personal'
+      # The callouts below will display a countdown between the calendar selectors and the calendar days when it's 30 days or fewer
+      # before the called-out day.  The Holiday name will be lowercased, spaces converted to underscores, and punctuation removed to match.
+      callouts:
+        - new_years_day
+        - valentines_day
+        - st_patricks_day
+        - easter
+        - juneteenth
+        - 4th_of_july
+        - labor_day
+        - halloween
+        - thanksgiving
+        - christmas
+
+
+  #### default calendar colors - format: [family-members.name]-default-primary-color: "[color value/name]"
   alice-default-primary-color: "#fb8072"
   bob-default-primary-color: "#fdbf6f"
   charlie-default-primary-color: "#a6cee3"
@@ -82,3 +130,4 @@ Skylight:
   family-default-primary-color: "#4A90E2"
   birthdays-default-primary-color: "#33a02c"
   holidays-default-primary-color: "#ff7f00"
+  default-disabled-color: 'light-grey'

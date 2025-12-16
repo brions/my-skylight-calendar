@@ -10,29 +10,13 @@
 # ==============================================================================
 
 # 1. HELPERS (The Variables)
-input_text:
-  # Filter Toggles (RegEx: .* = Show, ^$ = Hide)
-  alice_calendar_filter:
-    name: Alice Filter
+input_text: |
+  {# Filter Toggles (RegEx: .* = Show, ^$ = Hide) -#}
+  {% for member, info in 'var(--family_members)' -%}
+  {{member}}_calendar_filter:
+    name: {{info.name}} Filter
     initial: ".*"
-  bob_calendar_filter:
-    name: Bob Filter
-    initial: ".*"
-  charlie_calendar_filter:
-    name: Charlie Filter
-    initial: ".*"
-  daisy_calendar_filter:
-    name: Daisy Filter
-    initial: ".*"
-  family_calendar_filter:
-    name: Family Filter
-    initial: ".*"
-  birthdays_calendar_filter:
-    name: Birthdays Filter
-    initial: ".*"
-  holidays_calendar_filter:
-    name: Holidays Filter
-    initial: ".*"
+  {% endfor -%}
 
   # Event Form Data
   calendar_event_title:
@@ -89,96 +73,27 @@ input_boolean:
     name: Show Family Calendar
 
 # 2. SCRIPTS (The Logic)
-script:
-  # --- Filter Toggles ---
-  alice_calendar_visible_filter:
-    alias: Toggle Alice Calendar
+script: |
+  {# --- Filter Toggles --- #}
+  {% for member, info in 'var(--family-members)' -%}
+  {{member}}_calendar_visible_filter:
+    alias: Toggle {{info.name}} Calendar
     sequence:
       - action: input_text.set_value
         target:
-          entity_id: input_text.alice_calendar_filter
+          entity_id: input_text.{{member}}_calendar_filter
         data:
           value: >
-            {% if is_state('input_text.alice_calendar_filter', '.*') %} ^$ {% else %} .* {% endif %}
+            {% if is_state('input_text.{{member}}_calendar_filter', '.*') %} ^$ {% else %} .* {% endif %}
+  {% endfor -%}
 
-  bob_calendar_visible_filter:
-    alias: Toggle Bob Calendar
-    sequence:
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.bob_calendar_filter
-        data:
-          value: >
-            {% if is_state('input_text.bob_calendar_filter', '.*') %} ^$ {% else %} .* {% endif %}
-
-  charlie_calendar_visible_filter:
-    alias: Toggle Charlie Calendar
-    sequence:
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.charlie_calendar_filter
-        data:
-          value: >
-            {% if is_state('input_text.charlie_calendar_filter', '.*') %} ^$ {% else %} .* {% endif %}
-
-  daisy_calendar_visible_filter:
-    alias: Toggle Daisy Calendar
-    sequence:
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.daisy_calendar_filter
-        data:
-          value: >
-            {% if is_state('input_text.daisy_calendar_filter', '.*') %} ^$ {% else %} .* {% endif %}
-
-  family_calendar_visible_filter:
-    alias: Toggle Family Calendar
-    sequence:
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.family_calendar_filter
-        data:
-          value: >
-            {% if is_state('input_text.family_calendar_filter', '.*') %} ^$ {% else %} .* {% endif %}
-
-  birthdays_calendar_visible_filter:
-    alias: Toggle Birthdays Calendar
-    sequence:
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.birthdays_calendar_filter
-        data:
-          value: >
-            {% if is_state('input_text.birthdays_calendar_filter', '.*') %} ^$ {% else %} .* {% endif %}
-
-  holidays_calendar_visible_filter:
-    alias: Toggle Holidays Calendar
-    sequence:
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.holidays_calendar_filter
-        data:
-          value: >
-            {% if is_state('input_text.holidays_calendar_filter', '.*') %} ^$ {% else %} .* {% endif %}
-
-  # --- Add Event Logic ---
+  {# --- Add Event Logic --- #}
   add_google_calendar_event:
     alias: Process Add Calendar Event
     sequence:
       - variables:
-          # ====================================================================
-          # CONFIGURATION: ENTITY MAPPING
-          # Map the Dropdown Name (Left) to your Entity ID (Right).
-          # ====================================================================
-          calendar_map:
-            "Alice": "calendar.alice"
-            "Bob": "calendar.bob"
-            "Charlie": "calendar.charlie"
-            "Daisy": "calendar.daisy"
-            "Family": "calendar.family"
-          
-          # Selects the entity based on the map above
-          target_calendar: "{{ calendar_map.get(states('input_select.calendar_select'), 'calendar.family') }}"
+          {% set cal_name = states('input_select.calendar_select') | lower -%}
+          target_calendar: 'calendar.{{cal_name}}"
 
       - choose:
           # Scenario A: All Day Event
@@ -211,7 +126,7 @@ script:
                   start_date_time: "{{ states('input_datetime.calendar_event_start') }}"
                   end_date_time: "{{ states('input_datetime.calendar_event_end') }}"
 
-      # Cleanup and Close
+      {# Cleanup and Close #}
       - action: input_text.set_value
         target:
           entity_id: input_text.calendar_event_title
