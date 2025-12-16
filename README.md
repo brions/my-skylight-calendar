@@ -1,11 +1,5 @@
 # DIY Smart Home Family Calendar (Skylight Clone)
 
-> Note from BrionS:
-> 
-> This is a fork of the original Skylight clone project by @mohesles. This is my own spin on the clone.  As I make changes to my own tastes, if I make changes I feel are generally useful or functional improvements to the orignal project I will submit pull requests back to it.  I do not control the ability to merge those PRs, but anyone interested is welcome to fork this repo or simply clone my repo and use the parts you like in your own calendar.
-> 
-> Happy automating!
-
 ![Sklylight calendar](assets/main_view.jpeg)
 ![DIY Skylight](assets/sky2.png)
 
