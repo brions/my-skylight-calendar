@@ -37,11 +37,10 @@ Skylight:
   # --- 1. Load the Font (via card-mod) from Google with special notation so it appears in the header (or it won't work) ---
   card-mod-root-yaml: |
     .: |
-      @import url('https://fonts.googleapis.com/css2?family=Ovo&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Gilda+Display&display=swap');
   
-  # defines the primary font value as "Ovo", falling back to any "serif" font if Ovo isn't available
-  primary-font-family: "'Ovo', serif"
-
+  # defines the primary font value as "Gilda Display", falling back to any "serif" font if Ovo isn't available
+  primary-font-family: "'Gilda Display', serif"
   # --- 2. Apply the Font (using standard Home Assistant variables) ---
   # font values for for the majority of the UI (titles, sidebar, etc.) uses the naming convention:
   # ha-card-[class]-font-family
@@ -77,57 +76,53 @@ Skylight:
   # This dictionary is used in loops to generate calendars and other per-family-member sections of code.
   # The key is the member/calendar name used in other variables like the default colors below.
   # The value is the display name of that member/calendar which will be used anywhere the name is shown on the dashboard.
-  family-members:
-    alice: 
-      name: Alice
-      entity: person.alice
-      button_type: state
-    bob: 
-      name: Bob
-      entity: person.bob
-      button_type: state
-    charlie:
-      name: Charlie
-      entity: person.charlie
-      button_type: state
-    daisy: 
-      name: Daisy
-      entity: person.daisy
-      button_type: state
-    family: 
-      name: Family
-      button_type: switch
-      icon: 'mdi:human-male-female-child'
-      entity: 'input_boolean.family_calendar_show'
-    birthdays: 
-      name: Birthdays
-      button_type: name
-      icon: 'mdi:cake-variant'
-    holidays: 
-      name: Holidays
-      button_type: name
-      icon: 'mdi:bag-personal'
-      # The callouts below will display a countdown between the calendar selectors and the calendar days when it's 30 days or fewer
-      # before the called-out day.  The Holiday name will be lowercased, spaces converted to underscores, and punctuation removed to match.
-      callouts:
-        - new_years_day
-        - valentines_day
-        - st_patricks_day
-        - easter
-        - juneteenth
-        - 4th_of_july
-        - labor_day
-        - halloween
-        - thanksgiving
-        - christmas
+  calendars: 'dawn brion kieran family birthdays holidays'
+  dawn-name: Dawn
+  dawn-entity: person.dawn
+  dawn-button-type: state
 
+  brion-name: Brion
+  brion-entity: person.brion_swanson
+  brion-button-type: state
+  
+  kieran-name: Kieran
+  kieran-entity: person.kieran
+  kieran-button-type: state
+    
+  family-name: Family
+  family-button-type: switch
+  family-icon: 'mdi:human-male-female-child'
+  family-entity: 'input_boolean.family_calendar_show'
+  birthdays-name: Birthdays
+  birthdays-button-type: name
+  birthdays-icon: 'mdi:cake-variant'
 
+  holidays-name: Holidays
+  holidays-button-type: name
+  holidays-icon: 'mdi:bag-personal'
+
+  # The callouts below will display a countdown between the calendar selectors and the calendar days when it's 30 days or fewer
+  # before the called-out day.  The Holiday name will be lowercased, spaces converted to underscores, and punctuation removed to match.
+  holidays-callouts: |
+        new_years_day
+        valentines_day
+        st_patricks_day
+        easter
+        juneteenth
+        4th_of_july
+        labor_day
+        halloween
+        thanksgiving
+        christmas
+
+  #### sidebar color
+  sidebar-primary-color: "rgb(125,170,170)"
+  
   #### default calendar colors - format: [family-members.name]-default-primary-color: "[color value/name]"
-  alice-default-primary-color: "#fb8072"
-  bob-default-primary-color: "#fdbf6f"
-  charlie-default-primary-color: "#a6cee3"
-  daisy-default-primary-color: "#cab2d6"
-  family-default-primary-color: "#4A90E2"
-  birthdays-default-primary-color: "#33a02c"
-  holidays-default-primary-color: "#ff7f00"
+  dawn-primary-color: "lightskyblue"
+  brion-primary-color: "royalblue"
+  kieran-primary-color: "tomato"
+  family-primary-color: "#d8be5e"
+  birthdays-primary-color: "lightseagreen"
+  holidays-primary-color: "#ff7f00"
   default-disabled-color: 'light-grey'
