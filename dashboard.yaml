@@ -42,9 +42,9 @@ wallpanel:
       '--primary-text-color': '#e1e1e1'
       '--secondary-text-color': '#9b9b9b'
 views:
-  - title: Skylight Family Calendar
+  - title: Family Calendar
     max_columns: 10
-    path: skylight-family-calendar
+    path: family-calendar
     icon: mdi:calendar-blank-multiple
     sections:
       - type: grid
@@ -95,7 +95,6 @@ views:
                   {{moment format=yyyy}}
                 parentStyle: |
                   font-size:1em; text-align:center;
-                  text-align: center;
               - templateRaw: |
                   {{moment format=h:mm}}&nbsp;{{moment format=a}}
                 parentStyle: |
@@ -114,7 +113,6 @@ views:
                   box-shadow: none !important;
                   border: none !important;
                   top: -1em;
-                  #text-align: center !important;
                 }
           - type: custom:weather-card
             entity: weather.home
@@ -160,7 +158,10 @@ views:
                 content: ' '
                 card_mod:
                   style: >
-                    ha-card { background: none; box-shadow: none; border: none;
+                    ha-card { 
+                      background: none;
+                      box-shadow: none;
+                      border: none;
                     }
                 grid_options:
                   columns: 18

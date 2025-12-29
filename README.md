@@ -32,7 +32,6 @@ The hardware I originally used I chose based on what I mentioned above plus with
 * **Monitor:** [HP Engage 15-inch Touchscreen](https://computers.woot.com/offers/hp-engage-16t-fhd-monitor). I chose this over generic portable monitors because it includes a built-in **Speaker, Webcam, and Microphone**, allowing for future voice control or video calls.
 * **Computer:** An old Mini PC (NUC/Tiny PC) running Windows/Linux in Kiosk mode, or a Raspberry Pi 4.~~
 
-
 ## ✨ Features
 
 * **Family-wide & Individual Views:** Toggle specific family members' calendars on/off.
@@ -168,4 +167,3 @@ My original post was just to give a high level overview of how to do it and allo
 In particular I did this because every display and need is different. I can't develop for all potential sizes of displays, dashboards, etc. So it is built to work in the display I mentioned or any (1920x1080) but should be editable for others.
 
 Talking about display, I originally suggested that one because it was on sale at Woot and was a very economic way to get a touchscreen display at the time. This might not be the case now, so use whatever display works for you. Tablet, touchscreen, phone, whatever. The main thing youll need to edit is the dashboard.
-
