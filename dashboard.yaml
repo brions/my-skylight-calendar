@@ -1,307 +1,531 @@
-type: sections
-max_columns: 10
-title: Family Calendar
-path: family-calendar
-sections:
-  # --- HEADER SECTION (Date & Weather) ---
-  - type: grid
-    cards:
-      - type: custom:better-moment-card
-        parentStyle: |
-          line-height:normal;
-        moment:
-          - parentStyle: |
-              font-size:1em; text-align:center; margin-top:5px;
-            templateRaw: |
-              {{moment format=cccc}}
-          - parentStyle: |
-              font-size:1.5em; text-align:center; margin-top:5px;
-            templateRaw: |
-              {{moment format=LLLL dd, yyyy}}
-          - parentStyle: |
-              font-size:4em;  text-align:center; font-weight:400;
-            templateRaw: |
-              {{moment format=HH:mm}}
-        grid_options:
-          columns: 20
-        card_mod:
-          class: bg-default-style
-      - type: custom:weather-card
-        entity: "var(--default-weather-entity)"
-        current: true
-        details: true
-        forecast: false
-        grid_options:
-          columns: 20
-          rows: 3
-      - type: weather-forecast
-        show_current: false
-        show_forecast: true
-        entity: "var(--default-weather-entity)"
-        forecast_type: daily
-        name: Weather Forecast
-        grid_options:
-          columns: 20
-          rows: 3
-        card_mod:
-          class: bg-default-style
-    column_span: 10
-
-  # --- CONTROLS SECTION (Buttons) ---
-  - type: grid
-    cards:
-      - type: vertical-stack
+wallpanel:
+  enabled: true
+  hide_toolbar: true
+  hide_sidebar: true
+  fullscreen: false
+  show_images: true
+  idle_time: 1800
+  keep_screen_on_time: 604800
+  enabled_on_views:
+    - skylight-family-calendar
+  info_animation_timing_function_y: ease-in-out
+  info_animation_duration_y: 40
+  info_random_move_interval: 10
+  info_random_move_fade_duration: 2
+  cards:
+    - type: vertical-stack
+      cards:
+        - type: clock
+          clock_size: large
+          time_format: '12'
+          time_zone: America/New_York
+        - type: custom:weather-card
+          details: true
+          forecast: true
+          hourly_forecast: false
+          name: Weather
+          entity: weather.home
+          current: true
+          number_of_forecasts: '6'
+  style:
+    wallpanel-screensaver-info-box:
+      '--wp-card-width': 450px
+      background-color: '#00000099'
+      box-shadow: >-
+        0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0,
+        0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)
+    wallpanel-screensaver-info-box-content:
+      '--ha-card-background': none
+      '--ha-card-box-shadow': none
+      '--primary-background-color': '#111111'
+      '--secondary-background-color': '#202020'
+      '--primary-text-color': '#e1e1e1'
+      '--secondary-text-color': '#9b9b9b'
+views:
+  - title: Skylight Family Calendar
+    max_columns: 10
+    path: skylight-family-calendar
+    icon: mdi:calendar-blank-multiple
+    sections:
+      - type: grid
         cards:
-          - type: markdown
-            content: " "
+          - type: picture
+            grid_options:
+              columns: 6.5
+            image:
+              media_content_id: media-source://media_source/local/swanson_family_2017.jpg
             card_mod:
               style: |
-                ha-card { background: none; box-shadow: none; border: none; }
-            grid_options:
-              columns: 18
-              rows: auto
-        grid_options:
-          columns: 120
-          rows: auto
-      - type: vertical-stack
-        cards:
-          - type: markdown
-            content: <font color="Black" size="6">Family Calendar</font>
-            grid_options:
-              columns: 18
-              rows: auto
-        grid_options:
-          columns: 120
-          rows: auto
-      - type: horizontal-stack
-        # --- BUTTONS (Update entities below) ---
-        cards: |
-          {% set family_members = "var(--family-members)" -%}
-          {% for member, info in family_members %}
-          - type: custom:bubble-card
-            card_type: button
-            button_type: {{ info.button_type }}
-            {% if info.button_type === 'name' -%}
-            name: {{family_memebers[member].name}}
-              {% if info.icon -%}
-            icon: {{family_members}}
-              {% endif -%}
-            {% elif info.button_type === 'state' -%}
-            entity: {{info.entity}}
-            {% elif info.button_type === 'switch' -%}
-            entity: {{info.entity}}
-            name: {{info.name}}
-              {% if info.icon -%}
-            icon: {{info.icon}}
-              {% endif -%}
-            {% endif -%}
-            show_icon: true
-            show_name: true
-            tap_action:
-              action: perform-action
-              perform_action: script.{{member}}_calendar_visible_filter
-            styles: |
-              .bubble-button-background {
-                opacity: 1 !important;
-                background-color: ${hass.states['input_text.{{member}}_calendar_filter'].state === '.*' ? 'var(--default-disabled-color)' : 'var(--{{member}}-default-primary-color)'} !important;
-              }
-          {% endfor %}
-        grid_options:
-          columns: 45
-          rows: auto
-      - type: markdown
-        content: " "
-        grid_options:
-          columns: 3
-          rows: auto
-      - type: custom:bubble-card
-        card_type: button
-        button_type: name
-        card_layout: large
-        name: Add Event
-        icon: mdi:calendar-plus
-        tap_action:
-          action: navigate
-          navigation_path: "#addcalendarevent"
-        styles: |
-          * { font-size: 1.05em !important; }
-          ha-card { --bubble-main-background-color: #393745 !important; width: 300px; }    
-          .bubble-icon { --mdc-icon-size: 30px !important; color: snow !important; opacity: 1; }
-          .bubble-icon-container { background: #393745 !important; display: flex; }
-          .bubble-name { color: snow !important; opacity: 1; display: flex; line-height: 18px; flex-direction: row; justify-content: center; flex-grow: 1; margin: 0 40px 0 0; pointer-events: none; position: relative; overflow: hidden; }
-        grid_options:
-          columns: 10
-          rows: 1
-      - type: custom:bubble-card
-        card_type: select
-        entity: input_select.calendar_view
-        show_name: true
-        show_state: true
-        name: Select View
-        show_last_changed: false
-        show_attribute: false
-    column_span: 10
-
-  # --- CALENDAR SECTION (Week Planner Card) ---
-  - type: grid
-    cards:
-      - type: custom:config-template-card
-        entities: |
-          {% set family_members = "var(--family-members)" -%}
-          {% for member in family_members %}
-          - input_text.{{member}}_calendar_filter
-          {% endfor %}
-          - input_select.calendar_view
-        variables: |
-          {% set family_members = "var(--family-members)" %}
-          {% for member in family_members %}
-          {{member}}_cal: states['input_text.{{member}}_calendar_filter']?.state
-          {% endfor %}
-          VIEW: states['input_select.calendar_view']?.state
-          DAYS: |
-            (() => {
-              const width = window.innerWidth;
-              const calendarView = states['input_select.calendar_view']?.state;
-              if (width >= 390 && width<= 500) return 1;
-              if (calendarView === 'Today') return 1;
-              if (calendarView === 'Tomorrow') return 2;
-              if (calendarView === 'Bimonth' && width >= 1920) return 56;
-              if (calendarView === 'Month' && width >= 1920) return 28;
-              if (calendarView === 'Biweek' && width >= 1920) return 14;
-              if (calendarView === 'Week' && width >= 1920) return 7;
-              return "var(--default-calendar-days)";
-            })()
-        card:
-          type: custom:week-planner-card
-          # --- MAP CALENDARS HERE ---
-          calendars: |
-            {% set family_members = "var(--family-members)" %}
-            {%- for member in family_members %}
-            - entity: calendar.{{member}}
-              name: {{family_members[member].name}}
-              color: "var(--{{member}}-default-primary-color)"
-              filter: ${ {{member}}_cal }
-            {% endfor %}
-          days: ${ DAYS }
-          startingDayOffset: 0
-          hideWeekend: false
-          noCardBackground: false
-          compact: false
-          weather:
-            showCondition: true
-            showTemperature: true
-            showLowTemperature: true
-            useTwiceDaily: false
-            entity: weather.home # <--- UPDATE THIS ENTITY
-          locale: en
-          showLocation: true
-          hidePastEvents: false
-          hideDaysWithoutEvents: false
-          hideTodayWithoutEvents: false
-          combineSimilarEvents: true
-          showLegend: false
-          legendToggle: false
-          card_mod:
-            style: |
-              ha-card {
-                background: rgba(255, 255, 255, 0.6) !important;
-                border-radius: 24px;
-                box-shadow: none;
-                .event.past { opacity: .2; background-color: gray !important; }
-                .time { color: #333333 !important; font-size: 0.8em !important; }
-                .event { color: #333333 !important; line-height: 16px !important; background-color: var(--border-color) !important; border-radius: 10px !important; max-height: 80px !important; overflow: hidden !important; font-size: 1.1em !important; }
-                .none { background-color: transparent !important; }
-                .today .number { border-radius: 5px; background-color: orange !important; padding-left: 4px; padding-right: 4px; }
-                .day .date .text { font-size: 1em !important; font-weight: bold !important; }
-                .day .date .number { font-weight: bold !important; font-size: 3em !important; }
-                .day { border: solid 1px whitesmoke; padding: 0.2%; width: 13% !important; }
-              }
-        grid_options:
-          columns: 120
-          rows: 1
-          showDescription: false
-    column_span: 10
-
-  # --- POPUP SECTION (Hidden) ---
-  - type: grid
-    cards:
-      - type: vertical-stack
-        cards:
-          - type: custom:bubble-card
-            card_type: pop-up
-            hash: "#addcalendarevent"
-            button_type: name
-            name: Add Calendar Event
-            icon: mdi:calendar-plus
-            show_icon: true
-            show_name: true
-            styles: |
-              .bubble-button-card-container {
-                background: 
-                ${hass.states['input_select.calendar_select'].state == 'Alice' ? 'var(--alice-default-primary-color)' 
-                : hass.states['input_select.calendar_select'].state == 'Bob' ? 'var(--bob-default-primary-color)' 
-                : hass.states['input_select.calendar_select'].state == 'Charlie' ? 'var(--charlie-default-primary-color)' 
-                : hass.states['input_select.calendar_select'].state == 'Daisy' ? 'var(--daisy-default-primary-color)' 
-                : hass.states['input_select.calendar_select'].state == 'Family' ? 'var(--family-default-primary-color)' 
-                : 'gray'} !important;
-              }
+                :host(ha-card) {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
           - type: vertical-stack
             cards:
-              - type: entities
-                entities:
-                  - entity: input_select.calendar_select
-                  - entity: input_text.calendar_event_title
-                    name: Event Title
-                  - entity: input_text.calendar_event_description
-                    name: Event Description
-                  - entity: input_boolean.calendar_all_day_event
-                    name: All Day Event
-                title: Add Calendar Event
-                state_color: false
-              - type: conditional
-                conditions:
-                  - entity: input_boolean.calendar_all_day_event
-                    state: "off"
-                card:
-                  type: entities
-                  entities:
-                    - entity: input_datetime.calendar_event_start
-                      name: Start Time
-                    - entity: input_datetime.calendar_event_end
-                      name: End Time
-              - type: conditional
-                conditions:
-                  - entity: input_boolean.calendar_all_day_event
-                    state: "on"
-                card:
-                  type: entities
-                  entities:
-                    - entity: input_datetime.calendar_day_event_start
-                      name: Event Start Date
-                    - entity: input_datetime.calendar_day_event_end
-                      name: Event End Date
-              - type: custom:button-card
-                name: Add Event to Calendar
+              - type: markdown
+                content: <font color="Black" size="10">Swanson Family</font>
+                card_mod:
+                  style: |
+                    ha-card {
+                      font-family: var(--primary-font-family);
+                      font-size: 3em !important;
+                      border: none !important;
+                      box-shadow: none !important;
+                      background: transparent !important;
+                      text-align: center !important;
+                      padding: -10px 10px 0px 10px
+                    }
+            grid_options:
+              columns: 10
+              rows: auto
+          - type: custom:better-moment-card
+            parentStyle: |
+              line-height:normal;
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              grid-template-rows: 2fr;
+            layout_options:
+              grid_rows: 2
+            grid_options:
+              columns: 15
+            moment:
+              - templateRaw: ' '
+              - templateRaw: |
+                  {{moment format=yyyy}}
+                parentStyle: |
+                  font-size:1em; text-align:center;
+                  text-align: center;
+              - templateRaw: |
+                  {{moment format=h:mm}}&nbsp;{{moment format=a}}
+                parentStyle: |
+                  font-size: 4em;
+                  text-align: center;
+              - templateRaw: |
+                  {{moment format=cccc}}<br>{{moment format=LLL dd}}
+                parentStyle: |
+                  font-size:2em;
+                  text-align:center;
+            card_mod:
+              style: |
+                ha-card {
+                  font-family: var(--primary-font-family) !important;
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                  top: -1em;
+                  #text-align: center !important;
+                }
+          - type: custom:weather-card
+            entity: weather.home
+            current: true
+            details: false
+            forecast: false
+            grid_options:
+              columns: 8
+              rows: 2
+            hourly_forecast: true
+            card_mod:
+              style: |
+                ha-card {
+                  font-family: var(--primary-font-family);
+                  background: transparent !important;
+                  border: none !important;
+                  box-shadow: none !important;
+                  width: 90%;
+                  margin: 0 auto;
+          - show_current: false
+            show_forecast: true
+            type: weather-forecast
+            entity: weather.home
+            forecast_type: daily
+            name: Weather Forecast
+            grid_options:
+              columns: 16
+              rows: 2
+            forecast_slots: 5
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
+        column_span: 45
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: ' '
+                card_mod:
+                  style: >
+                    ha-card { background: none; box-shadow: none; border: none;
+                    }
+                grid_options:
+                  columns: 18
+                  rows: auto
+            grid_options:
+              columns: 120
+              rows: auto
+          - type: horizontal-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: button
+                button_type: state
+                entity: person.dawn
+                show_icon: true
+                show_name: true
+                styles: |
+                  .bubble-button-background {
+                    opacity: 1 !important;
+                    background-color: ${hass.states['input_text.dawn_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--dawn-primary-color)'} !important;
+                  }
+                button_action:
+                  tap_action:
+                    action: perform-action
+                    perform_action: script.dawn_calendar_visible_filter
+                    target: {}
+                card_mod:
+                  class: dawn-theme
+                  style: |
+                    .bubble-name.name {
+                      font-size: 1em;
+                    }
+                    .bubble-state.state {
+                      font-size: 1em;
+                    }
+              - type: custom:bubble-card
+                card_type: button
+                button_type: state
+                entity: person.brion_swanson
+                show_icon: true
+                show_name: true
+                styles: |
+                  .bubble-button-background {
+                    opacity: 1 !important;
+                    background-color: ${hass.states['input_text.brion_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--brion-primary-color)'} !important;
+                  }
+                button_action:
+                  tap_action:
+                    action: perform-action
+                    perform_action: script.brion_calendar_visible_filter
+                    target: {}
+                card_mod:
+                  style: |
+                    .bubble-name.name {
+                      font-size: 1em;
+                    }
+                    .bubble-state.state {
+                      font-size: 1em;
+                    }
+              - type: custom:bubble-card
+                card_type: button
+                button_type: state
+                entity: person.kieran
+                show_icon: true
+                show_name: true
+                styles: |
+                  .bubble-button-background {
+                    opacity: 1 !important;
+                    background-color: ${hass.states['input_text.kieran_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--kieran-primary-color)'} !important;
+                  }
+                button_action:
+                  tap_action:
+                    action: perform-action
+                    perform_action: script.kieran_calendar_visible_filter
+                    target: {}
+                card_mod:
+                  style: |
+                    .bubble-name.name {
+                      font-size: 1em;
+                    }
+                    .bubble-state.state {
+                      font-size: 1em;
+                    }
+              - type: custom:bubble-card
+                card_type: button
+                button_type: switch
+                name: Family
+                icon: mdi:human-male-female-child
+                show_icon: true
+                show_name: true
                 tap_action:
-                  action: call-service
-                  service: script.add_google_calendar_event
-                styles:
-                  card:
-                    - background-color: |
-                        [[[
-                          if (states['input_select.calendar_select'].state == 'Alice') return "var(--alice-default-primary-color)";
-                          if (states['input_select.calendar_select'].state == 'Bob') return "var(--bob-default-primary-color)";
-                          if (states['input_select.calendar_select'].state == 'Charlie') return "var(--charlie-default-primary-color)";
-                          if (states['input_select.calendar_select'].state == 'Daisy') return "var(--daisy-default-primary-color)";
-                          if (states['input_select.calendar_select'].state == 'Family') return "var(--family-default-primary-color)";
-                          return "gray";
-                        ]]]
-cards: []
-icon: mdi:calendar-blank-multiple
-background:
-  opacity: 62
-  alignment: center
-  size: cover
-  repeat: repeat
-  attachment: fixed
-  image: /local/your-background-image.jpg
+                  action: perform-action
+                  perform_action: script.family_calendar_visible_filter
+                styles: |
+                  .bubble-button-background {
+                    opacity: 1 !important;
+                    background-color: ${hass.states['input_text.family_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--family-primary-color)'} !important;
+                  }
+                entity: input_boolean.family_calendar_show
+                button_action:
+                  tap_action:
+                    action: perform-action
+                    perform_action: script.family_calendar_visible_filter
+                    target: {}
+                card_mod:
+                  style: |
+                    .bubble-name.name {
+                      font-size: 1em;
+                    }
+                    .bubble-state.state {
+                      font-size: 1em;
+                    }
+              - type: custom:bubble-card
+                card_type: button
+                button_type: name
+                name: Celebrations
+                icon: mdi:cake-variant
+                show_icon: true
+                show_name: true
+                tap_action:
+                  action: perform-action
+                  perform_action: script.birthdays_calendar_visible_filter
+                styles: |
+                  .bubble-button-background {
+                    opacity: 1 !important;
+                    background-color: ${hass.states['input_text.birthdays_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--birthdays-primary-color)'} !important;
+                  }
+                button_action:
+                  tap_action:
+                    action: perform-action
+                    perform_action: script.birthdays_calendar_visible_filter
+                    target: {}
+                card_mod:
+                  style: |
+                    .bubble-name.name {
+                      font-size: 1em;
+                    }
+                    .bubble-state.state {
+                      font-size: 1em;
+                    }
+              - type: custom:bubble-card
+                card_type: button
+                button_type: name
+                name: Holidays
+                icon: mdi:bag-personal
+                show_icon: true
+                show_name: true
+                tap_action:
+                  action: perform-action
+                  perform_action: script.holidays_calendar_visible_filter
+                styles: |
+                  .bubble-button-background {
+                    opacity: 1 !important;
+                    background-color: ${hass.states['input_text.holidays_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--holidays-primary-color)'} !important;
+                  }
+                button_action:
+                  tap_action:
+                    action: perform-action
+                    perform_action: script.holidays_calendar_visible_filter
+                    target: {}
+                card_mod:
+                  style: |
+                    .bubble-name.name {
+                      font-size: 1em;
+                    }
+                    .bubble-state.state {
+                      font-size: 1em;
+                    }
+              - type: custom:gap-card
+              - type: custom:bubble-card
+                card_type: select
+                entity: input_select.calendar_view
+                show_name: true
+                show_state: true
+                name: ''
+                show_last_changed: false
+                show_attribute: false
+                card_mod:
+                  style: |
+                    .bubble-state.state {
+                      font-size: 1em;
+                    }
+                    .bubble-container * {
+                      z-index: 20;
+                    }
+            grid_options:
+              columns: full
+          - type: markdown
+            content: ' '
+            grid_options:
+              columns: 3
+              rows: auto
+            card_mod:
+              style: |
+                ha-card {
+                  background: transparent !important;
+                  box-shadow: none !important;
+                  border: none !important;
+                }
+        column_span: 45
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:config-template-card
+                entities:
+                  - input_text.dawn_calendar_filter
+                  - input_text.brion_calendar_filter
+                  - input_text.kieran_calendar_filter
+                  - input_text.family_calendar_filter
+                  - input_text.holidays_calendar_filter
+                  - input_text.birthdays_calendar_filter
+                  - input_select.calendar_view
+                variables:
+                  DAWCAL: states['input_text.dawn_calendar_filter']?.state
+                  BRICAL: states['input_text.brion_calendar_filter']?.state
+                  KIECAL: states['input_text.kieran_calendar_filter']?.state
+                  FAMCAL: states['input_text.family_calendar_filter']?.state
+                  HOLCAL: states['input_text.holidays_calendar_filter']?.state
+                  BIRCAL: states['input_text.birthdays_calendar_filter']?.state
+                  VIEW: states['input_select.calendar_view']?.state
+                  DAYS: |
+                    (() => {
+                      const calendarView = states['input_select.calendar_view']?.state;
+                      if (calendarView === 'Week') return 7;
+                      if (calendarView === 'Biweek') return 14;
+                      // else return "month" to let the calendar figure it out
+                      return 'month';
+                    })()
+                  next_month: |
+                    (() => {
+                      return new Date().getMonth() + 1;
+                    })()
+                card:
+                  type: custom:week-planner-card
+                  calendars:
+                    - entity: calendar.dawn_skycal
+                      name: Dawn
+                      color: var(--dawn-primary-color)
+                      filter: ${ DAWCAL }
+                    - entity: calendar.brion_skycal
+                      name: Brion
+                      color: var(--brion-primary-color)
+                      filter: ${ BRICAL }
+                    - entity: calendar.kieran_skycal
+                      name: Kieran
+                      color: var(--kieran-primary-color)
+                      filter: ${ KIECAL }
+                    - entity: calendar.family_2
+                      name: Family
+                      color: var(--family-primary-color)
+                      filter: ${ FAMCAL }
+                    - entity: calendar.birthday_skycal
+                      name: Birthdays
+                      color: var(--birthdays-primary-color)
+                      filter: ${ BIRCAL }
+                    - entity: calendar.holidays_in_united_states
+                      name: Holidays
+                      color: var(--holidays-primary-color)
+                      filter: ${ HOLCAL }
+                  days: ${ DAYS }
+                  timeFormat: h:mm
+                  startingDay: sunday
+                  hideWeekend: false
+                  noCardBackground: false
+                  compact: true
+                  weather:
+                    showCondition: true
+                    showTemperature: true
+                    showLowTemperature: true
+                    useTwiceDaily: false
+                    entity: weather.home
+                  locale: en
+                  showLocation: true
+                  showNavigation: true
+                  hidePastEvents: false
+                  hideDaysWithoutEvents: false
+                  hideTodayWithoutEvents: false
+                  combineSimilarEvents: true
+                  showLegend: false
+                  legendToggle: false
+                  texts:
+                    today: ''
+                    tomorrow: ''
+                    yesterday: ''
+                    fullDay: All day
+                  card_mod:
+                    style: |
+                      :host {
+                        overflow: hidden !important
+                      }
+                      ha-card {
+                        background: rgba(255, 255, 255, 0.6) !important;
+                        border-radius: 24px;
+                        box-shadow: none;
+                        max-height: 60svh !important;
+                        min-height: 60svh !important;
+                        min-width: 90vw !important;
+                        overflow-y: scroll !important;
+                        scrollbar-width: none !important;
+                        display: block !important;
+                        .hide-scrollbar::-webkit-scrollbar { display: none; }
+                        .event.past { opacity: .2; background-color: gray !important; }
+                        .time { color: #333333 !important; font-size: 0.8em !important; }
+                        .event { color: #333333 !important; line-height: 16px !important; background-color: var(--border-color) !important; border-radius: 10px !important; max-height: 80px !important; overflow: hidden !important; font-size: 1.1em !important; }
+                        .none { background-color: transparent !important; }
+                        .today .number { border-radius: 5px; background-color: orange !important; padding-left: 4px; padding-right: 4px; }
+                        .day .date .text { font-size: 1em !important; font-weight: bold !important; }
+                        .day .date .number { font-weight: bold !important; font-size: 3em !important; }
+                        .day { border: solid 1px whitesmoke; padding: 0.2%; width: 13% !important; }
+                      }
+                      ha-card .container {
+                        position: relative;
+                      }
+                      ha-card .header {
+                        position: sticky;
+                        top: 0;
+                        height: auto;
+                        z-index: 10;
+                      }
+                      ha-card .navigation { 
+                        align-items: center; 
+                        font-family: var(--primary-font-family);
+                        background-color: var(--primary-background-color) !important;
+                      }
+            grid_options:
+              columns: full
+        column_span: 45
+      - type: grid
+        cards:
+          - type: custom:navbar-card
+            routes:
+              - url: /skylight-family-calendar/skylight-family-calendar
+                icon: mdi:home
+                label: Home
+              - url: '#settings'
+                icon: mdi:cog
+                label: Settings
+            desktop:
+              position: left
+              mode: docked
+            card_mod:
+              style: |
+                ha-card {
+                   background-color: var(--sidebar-primary-color) !important;
+                   box-shadow: none !important;
+                   border: none !important;
+                   
+                 }
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:bubble-card
+                card_type: pop-up
+                hash: '#settings'
+                button_type: name
+                name: Settings
+                icon: mdi:cog
+                card_layout: normal
+            card_mod:
+              style: |
+                :host(ha-card) {
+                  display: none !important
+                }
+    header:
+      layout: responsive
+      badges_position: bottom
+      badges_wrap: wrap
