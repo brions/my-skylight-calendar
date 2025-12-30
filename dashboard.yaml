@@ -7,7 +7,7 @@ wallpanel:
   idle_time: 1800
   keep_screen_on_time: 604800
   enabled_on_views:
-    - skylight-family-calendar
+    - home
   info_animation_timing_function_y: ease-in-out
   info_animation_duration_y: 40
   info_random_move_interval: 10
@@ -42,9 +42,9 @@ wallpanel:
       '--primary-text-color': '#e1e1e1'
       '--secondary-text-color': '#9b9b9b'
 views:
-  - title: Family Calendar
+  - title: Home
     max_columns: 10
-    path: family-calendar
+    path: home
     icon: mdi:calendar-blank-multiple
     sections:
       - type: grid
@@ -74,7 +74,7 @@ views:
                       box-shadow: none !important;
                       background: transparent !important;
                       text-align: center !important;
-                      padding: -10px 10px 0px 10px
+                      padding: .25em 0em 0em 0em;
                     }
             grid_options:
               columns: 10
@@ -94,7 +94,9 @@ views:
               - templateRaw: |
                   {{moment format=yyyy}}
                 parentStyle: |
-                  font-size:1em; text-align:center;
+                  font-size: 1em;
+                  text-align: center; 
+                  padding-top: 4em;
               - templateRaw: |
                   {{moment format=h:mm}}&nbsp;{{moment format=a}}
                 parentStyle: |
@@ -131,7 +133,8 @@ views:
                   border: none !important;
                   box-shadow: none !important;
                   width: 90%;
-                  margin: 0 auto;
+                  top: 3em;
+                }
           - show_current: false
             show_forecast: true
             type: weather-forecast
@@ -148,6 +151,7 @@ views:
                   background: transparent !important;
                   box-shadow: none !important;
                   border: none !important;
+                  top: 3em;
                 }
         column_span: 45
       - type: grid
@@ -157,7 +161,7 @@ views:
               - type: markdown
                 content: ' '
                 card_mod:
-                  style: >
+                  style: |
                     ha-card { 
                       background: none;
                       box-shadow: none;
@@ -344,7 +348,7 @@ views:
                       font-size: 1em;
                     }
                     .bubble-container * {
-                      z-index: 20;
+                      z-index: 3;
                     }
             grid_options:
               columns: full
@@ -479,12 +483,13 @@ views:
                         position: sticky;
                         top: 0;
                         height: auto;
-                        z-index: 10;
+                        z-index: 3;
                       }
                       ha-card .navigation { 
                         align-items: center; 
                         font-family: var(--primary-font-family);
-                        background-color: var(--primary-background-color) !important;
+                        background: rgba(255, 255, 255, 0.6) !important;
+                        min-width: 95vw !important;
                       }
             grid_options:
               columns: full
@@ -495,10 +500,8 @@ views:
             routes:
               - url: /skylight-family-calendar/skylight-family-calendar
                 icon: mdi:home
-                label: Home
               - url: '#settings'
                 icon: mdi:cog
-                label: Settings
             desktop:
               position: left
               mode: docked
