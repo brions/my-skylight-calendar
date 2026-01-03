@@ -186,6 +186,9 @@ views:
                     opacity: 1 !important;
                     background-color: ${hass.states['input_text.dawn_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--dawn-primary-color)'} !important;
                   }
+                  .bubble-button {
+                    font-family: var(--secondary-font-family);
+                  }
                 button_action:
                   tap_action:
                     action: perform-action
@@ -211,6 +214,9 @@ views:
                     opacity: 1 !important;
                     background-color: ${hass.states['input_text.brion_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--brion-primary-color)'} !important;
                   }
+                  .bubble-button {
+                    font-family: var(--secondary-font-family);
+                  }
                 button_action:
                   tap_action:
                     action: perform-action
@@ -234,6 +240,9 @@ views:
                   .bubble-button-background {
                     opacity: 1 !important;
                     background-color: ${hass.states['input_text.kieran_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--kieran-primary-color)'} !important;
+                  }
+                  .bubble-button {
+                    font-family: var(--secondary-font-family);
                   }
                 button_action:
                   tap_action:
@@ -262,6 +271,9 @@ views:
                   .bubble-button-background {
                     opacity: 1 !important;
                     background-color: ${hass.states['input_text.family_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--family-primary-color)'} !important;
+                  }
+                  .bubble-button {
+                    font-family: var(--secondary-font-family);
                   }
                 entity: input_boolean.family_calendar_show
                 button_action:
@@ -292,6 +304,9 @@ views:
                     opacity: 1 !important;
                     background-color: ${hass.states['input_text.birthdays_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--birthdays-primary-color)'} !important;
                   }
+                  .bubble-button {
+                    font-family: var(--secondary-font-family);
+                  }
                 button_action:
                   tap_action:
                     action: perform-action
@@ -319,6 +334,9 @@ views:
                   .bubble-button-background {
                     opacity: 1 !important;
                     background-color: ${hass.states['input_text.holidays_calendar_filter'].state === '.*' ? 'light-grey' : 'var(--holidays-primary-color)'} !important;
+                  }
+                  .bubble-button {
+                    font-family: var(--secondary-font-family);
                   }
                 button_action:
                   tap_action:
@@ -349,6 +367,9 @@ views:
                     }
                     .bubble-container * {
                       z-index: 3;
+                    }
+                    .bubble-button {
+                      font-family: var(--secondary-font-family);
                     }
             grid_options:
               columns: full
@@ -460,6 +481,7 @@ views:
                         background: rgba(255, 255, 255, 0.6) !important;
                         border-radius: 24px;
                         box-shadow: none;
+                        font-family: var(--secondary-font-family);
                         max-height: 60svh !important;
                         min-height: 60svh !important;
                         min-width: 90vw !important;
@@ -498,13 +520,144 @@ views:
         cards:
           - type: custom:navbar-card
             routes:
-              - url: /skylight-family-calendar/skylight-family-calendar
-                icon: mdi:home
-              - url: '#settings'
-                icon: mdi:cog
+              - url: /skylight-family-calendar/home
+                icon: mdi:calendar
+                label: Calendar
+              - icon: mdi:sofa
+                label: Rooms
+                tap_action:
+                  action: open-popup
+                popup:
+                  - icon: mdi:television
+                    url: ''
+                    badge:
+                      color: yellow
+                      show: >-
+                        [[[return
+                        states['binary_sensor.any_family_room_lights'].state ===
+                        'on']]]
+                      count: >-
+                        [[[return
+                        states['sensor.family_room_lights_on'].state]]]
+                    label: Family Room
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#family-room'
+                  - icon: mdi:desktop-tower-monitor
+                    label: Front Room
+                    url: ''
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#front-room'
+                    badge:
+                      show: >-
+                        [[[return
+                        states['binary_sensor.any_front_room_lights'].state ===
+                        'on']]]
+                      count: '[[[return states[''sensor.front_room_lights_on''].state]]]'
+                      color: yellow
+                  - icon: mdi:bed-king
+                    label: Grand Bedroom
+                    url: ''
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#grand-bedroom'
+                    badge:
+                      show: >-
+                        [[[return
+                        states['binary_sensor.any_grand_bedroom_lights'].state
+                        === 'on']]]
+                      count: >-
+                        [[[return
+                        states['sensor.grand_bedroom_lights_on'].state]]]
+                      color: yellow
+                  - icon: mdi:chandelier
+                    label: Foyer / Hallway
+                    url: ''
+                    icon_selected: ''
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#foyer'
+                    badge:
+                      show: >-
+                        [[[return
+                        states['binary_sensor.any_upstairs_hallway_lights'].state
+                        === 'on']]]
+                      count: >-
+                        [[[return
+                        states['sensor.upstairs_hallway_lights_on'].state]]]
+                  - icon: mdi:bed
+                    label: Kieran's Room
+                    url: ''
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#kieran-bedroom'
+                    badge:
+                      color: yellow
+                      show: >-
+                        [[[return
+                        states['binary_sensor.any_kierans_bedroom_lights'].state
+                        === 'on']]]
+                      count: >-
+                        [[[return
+                        states['sensor.kierans_bedroom_lights_on'].state]]]
+                  - icon: mdi:spider-web
+                    label: Basement
+                    url: ''
+                    badge:
+                      show: >-
+                        [[[return
+                        states['binary_sensor.any_basement_lights'].state ===
+                        'on']]]
+                      count: '[[[return states[''sensor.basement_lights_on''].state]]]'
+                      color: yellow
+                  - icon: mdi:grass
+                    label: Outdoors
+                    url: ''
+                    tap_action:
+                      action: navigate
+                      navigation_path: '#outdoors'
+                    badge:
+                      show: >-
+                        [[[return
+                        states['binary_sensor.any_outdoor_lights'].state ===
+                        'on']]]
+                      color: yellow
+                      count: '[[[return states[''sensor.outdoor_lights_on''].state]]]'
+                url: ''
+                badge:
+                  show: '[[[return states[''sensor.any_indoor_lights'']]]]'
+                  count: '[[[return states[''sensor.indoor_lights_on''].state]]]'
+                  color: yellow
+              - icon: mdi:creation
+                label: Automations
+                url: /lovelace/automations
+                badge:
+                  color: ''
+                  show: false
+              - url: ''
+                icon: mdi:dots-horizontal
+                label: More
+                popup:
+                  - icon: mdi:cog
+                    label: Settings
+                    url: family-calendar#settings
+                tap_action:
+                  action: open-popup
             desktop:
               position: left
               mode: docked
+              show_popup_label_backgrounds: false
+              min_width: 720
+              show_labels: true
+            layout:
+              auto_padding:
+                enabled: true
+                desktop_px: 100
+                mobile_px: 180
+              reflect_child_state: true
+            mobile:
+              show_labels: true
             card_mod:
               style: |
                 ha-card {
@@ -533,3 +686,27 @@ views:
       layout: responsive
       badges_position: bottom
       badges_wrap: wrap
+  - type: custom:grid-layout
+    path: control-center
+    title: Control Center
+    icon: mdi:alarm-panel
+    theme: Skylight
+    subview: true
+    cards:
+      - type: picture-elements
+        elements:
+          - type: state-badge
+            entity: sensor.solar_energy_generated
+            style:
+              top: 32%
+              left: 40%
+          - type: state-badge
+            style:
+              left: 5%
+              top: 50%
+            entity: light.family_room_lights
+            title: Family Room
+        image:
+          media_content_id: https://demo.home-assistant.io/stub_config/floorplan.png
+        title: Home Controls
+        theme: Skylight

@@ -47,7 +47,7 @@ Skylight:
 
   # set the font specifically for card headers
   ha-card-header-font-family: "var(--primary-font-family)"
-  #ha-card-body-font-family: "var(--primary-font-family) !important"
+  ha-body-font-family: "var(--primary-font-family) !important"
 
   # legacy "Paper" variables (Polymer elements) - ensures deep UI elements match (common practice)
   paper-font-common-base_-_font-family: "var(--primary-font-family)"
